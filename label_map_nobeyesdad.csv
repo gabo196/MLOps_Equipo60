@@ -1,0 +1,10 @@
+label,id
+Insufficient_Weight,0
+Nan,1
+Normal_Weight,2
+Obesity_Type_I,3
+Obesity_Type_Ii,4
+Obesity_Type_Iii,5
+Overweight_Level_I,6
+Overweight_Level_Ii,7
+Unknown,8
