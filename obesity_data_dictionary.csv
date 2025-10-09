@@ -16,4 +16,3 @@ tue,float64,Tiempo frente a pantallas (horas/día)
 calc,object,Consumo de alcohol
 mtrans,object,Medio de transporte principal
 nobeyesdad,object,Nivel de obesidad (target)
-mixed_type_col,object,Variable generada en la etapa de codificación / features dummy
