@@ -5,3 +5,7 @@ numpy>=1.21.0
 # Data visualization
 matplotlib>=3.5.0
 seaborn>=0.11.0
+
+# Data versioning
+dvc>=2.0.0
+dvc[gdrive]>=2.0.0  # If using Google Drive remote
