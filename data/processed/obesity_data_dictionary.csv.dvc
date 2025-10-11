@@ -1,0 +1,5 @@
+outs:
+- md5: 23d50857381b8e1d9cbf21749d67d69b
+  size: 744
+  hash: md5
+  path: obesity_data_dictionary.csv

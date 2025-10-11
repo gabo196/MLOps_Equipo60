@@ -1,0 +1,35 @@
+# BEGIN: Typical .gitignore for MLOps project
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data
+*.json
+
+# Model files
+models/
+*.h5
+*.pkl
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.venv/
+venv/
+env/
+*.env
+
+# Temporary files
+*.tmp
+*.temp
+# END: Typical .gitignore for MLOps project

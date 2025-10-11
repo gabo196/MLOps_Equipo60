@@ -1,0 +1,5 @@
+outs:
+- md5: ba4963cf04a5ff4666e8299e7e31a26c
+  size: 160
+  hash: md5
+  path: label_map_nobeyesdad.csv
