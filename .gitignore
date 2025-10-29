@@ -14,9 +14,24 @@ __pycache__/
 *.json
 
 # Model files
-models/
 *.h5
 *.pkl
+
+# MLflow
+# El directorio mlruns contiene todos los artefactos y métricas
+mlruns/
+# La base de datos local de MLflow
+mlflow.db
+
+# Reports
+reports/figures/*.png
+reports/figures/*.jpg
+reports/figures/*.svg
+reports/*.html
+reports/*.pdf
+reports/*.docx
+reports/*.xlsx
+reports/*.csv
 
 # Logs
 logs/
@@ -29,7 +44,12 @@ venv/
 env/
 *.env
 
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
 # Temporary files
 *.tmp
 *.temp
-# END: Typical .gitignore for MLOps project
