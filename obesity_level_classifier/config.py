@@ -16,10 +16,19 @@ INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 EXTERNAL_DATA_DIR = DATA_DIR / "external"
 
+RAW_FILE_NAME = "obesity_estimation_modified.csv"
+PROCESSED_FILE_NAME = "obesity_estimation_cleaned.csv"
+TEST_SET_FILE_NAME = "obesity_estimation_test.csv"
+
 MODELS_DIR = PROJ_ROOT / "models"
 
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
+
+# Training config
+TARGET_COLUMN = "NObesity"
+MLFLOW_EXPERIMENT_NAME = "Obesity_Level_Estimation"
+MODEL_NAME = "obesity_classifier"
 
 # If tqdm is installed, configure loguru with tqdm.write
 # https://github.com/Delgan/loguru/issues/135

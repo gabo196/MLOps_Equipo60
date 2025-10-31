@@ -3,8 +3,12 @@
 #################################################################################
 
 PROJECT_NAME = obesity_level_classifier
-PYTHON_VERSION = 3.10
+PYTHON_VERSION = 3.12
 PYTHON_INTERPRETER = python
+
+# --- Rutas del Proyecto ---
+RAW_DATA_PATH = data/raw/obesity_estimation_modified.csv
+PROCESSED_DATA_PATH = data/processed/obesity_estimation_cleaned.csv
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -60,7 +64,17 @@ create_environment:
 ## Make dataset
 .PHONY: data
 data: requirements
-	$(PYTHON_INTERPRETER) obesity_level_classifier/dataset.py
+	$(PYTHON_INTERPRETER) obesity_level_classifier/dataset.py 
+
+## Train model
+.PHONY: train
+train: data
+	$(PYTHON_INTERPRETER) obesity_level_classifier/modeling/train.py
+
+## Make predictions with the staging model
+.PHONY: predict
+predict: train
+	$(PYTHON_INTERPRETER) obesity_level_classifier/modeling/predict.py
 
 
 #################################################################################

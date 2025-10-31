@@ -5,7 +5,7 @@
 Este repositorio contiene un proyecto de Machine Learning cuyo objetivo es clasificar los niveles de obesidad de un individuo basándose en sus hábitos alimenticios y condición física.
 
   * **Fase 1:** Se centró en la limpieza de datos, el análisis exploratorio (EDA) y el prototipado inicial de modelos en Jupyter Notebooks.
-  * **Fase 2:** El proyecto se ha refactorizado a una estructura MLOps profesional, implementando scripts de Python, `Pipelines` de Scikit-Learn y `MLflow` para el seguimiento de experimentos y el registro de modelos.
+  * **Fase 2:** El proyecto se ha refactorizado a una estructura MLOps profesional (basada en la plantilla **Cookiecutter Data Science**), implementando scripts de Python, `Pipelines` de Scikit-Learn y `MLflow` para el seguimiento de experimentos y el registro de modelos.
 
 Este proyecto utiliza **DVC (Data Version Control)** para el versionado de datos, garantizando la reproducibilidad de los datasets.
 
@@ -13,44 +13,46 @@ Este proyecto utiliza **DVC (Data Version Control)** para el versionado de datos
 
 ## Miembros del Equipo y Roles
 
-  - **Data Engineer:** ` Victor Manuel Camarillo Cruz - A01796318  `
-  - **Data Scientist:** ` Elda C. Morales Sánchez de la Barquera - A00449074  `
-  - **Software Engineer:** `Gerardo Miguel Pérez Solis - A01795599`
-  - **Site Reliability Engineer:** ` Gabriel Alejandro Amezcua Baltazar - A01795173  `
-  - **ML Engineer:** ` Juan José Estrada Lazo - A01796935  `
+  * **Data Engineer:** `Victor Manuel Camarillo Cruz - A01796318`
+  * **Data Scientist:** `Elda C. Morales Sánchez de la Barquera - A00449074`
+  * **Software Engineer:** `Gerardo Miguel Pérez Solis - A01795599`
+  * **Site Reliability Engineer:** `Gabriel Alejandro Amezcua Baltazar – A01795173`
+  * **ML Engineer:** `Juan José Estrada Lazo - A01796935`
 
 -----
 
 ## Estructura del Repositorio (Fase 2)
 
-La estructura sigue una plantilla profesional (tipo Cookiecutter) que separa el código fuente, los datos y los notebooks.
+La estructura sigue la plantilla **Cookiecutter Data Science**, que organiza el proyecto como un paquete de Python instalable.
 
 ```bash
 .
 ├── .dvc/                   # Archivos internos de DVC
 ├── data/
 │   ├── raw/                # Datasets originales (controlados por DVC)
-│   │   ├── obesity_estimation_modified.csv.dvc
-│   │   └── obesity_estimation_original.csv.dvc
-│   └── processed/          # Datasets limpios (controlados por DVC)
-│       └── obesity_estimation_cleaned.csv.dvc
-├── models/                 # (Vacío: Los modelos ahora se registran en MLflow)
+│   ├── processed/          # Datasets limpios y divididos (controlados por DVC)
+│   └── interim/            # (Sin usar en este proyecto)
+│
+├── docs/                   # Archivos Markdown para la documentación del proyecto (ver nota)
+├── models/                 # (Vacío: Los modelos se gestionan en el Model Registry de MLflow)
 ├── notebooks/              # Notebooks de exploración (Fase 1 - Archivados)
-│   ├── 1_Limpieza_y_EDA.ipynb
-│   └── 2_Modelo_Predictivo.ipynb
-├── reports/                # Reportes y figuras generadas
-├── src/                    # Código fuente refactorizado
+├── reports/                # Reportes y figuras generadas (e.g., matrices de confusión)
+├── references/             # (Vacío)
+├── obesity_level_classifier/ # <--- CÓDIGO FUENTE DEL PROYECTO
 │   ├── __init__.py
-│   ├── data/
-│   │   └── make_dataset.py     # Script para limpieza y procesamiento de datos
-│   ├── features/
-│   │   └── build_features.py   # Script para definir el preprocesador
-│   └── models/
-│       ├── train_model.py      # Script para entrenar y registrar en MLflow
-│       └── predict_model.py    # Script para cargar modelo y predecir
+│   ├── dataset.py          # Script para limpieza y procesamiento de datos
+│   ├── features.py         # Script para definir el preprocesador
+│   ├── plots.py            # Script con funciones para generar gráficos
+│   └── modeling/
+│       ├── __init__.py
+│       ├── train.py        # Script para entrenar y registrar en MLflow
+│       └── predict.py      # Script para cargar modelo y predecir
+│
 ├── .gitignore
+├── Makefile                # <--- Tareas automatizadas (make data, make train)
 ├── mlflow.db               # Base de datos de experimentos de MLflow
 ├── mlruns/                 # Artefactos y métricas de MLflow (Ignorado por Git)
+├── pyproject.toml          # Define cómo instalar el proyecto como un paquete
 ├── requirements.txt        # Dependencias del proyecto
 └── README.md
 ```
@@ -63,9 +65,10 @@ Sigue estos pasos para configurar el entorno y ejecutar el pipeline completo de 
 
 ### Prerrequisitos
 
-  - Python 3.8+
-  - Git
-  - DVC
+  * Python 3.12+
+  * Git
+  * DVC
+  * `make` (generalmente preinstalado en macOS/Linux; en Windows, usar Git Bash)
 
 ### 1\. Clonar el Repositorio
 
@@ -76,33 +79,30 @@ cd [NOMBRE_DEL_REPOSITORIO]
 
 ### 2\. Crear un Entorno Virtual e Instalar Dependencias
 
-Asegúrate de que tu archivo `requirements.txt` contenga todas las librerías necesarias.
+Este es el paso más importante. Se instalan las librerías Y tu propio código fuente como un paquete.
 
 ```bash
 # Crear entorno virtual
 python -m venv venv
 
 # Activar el entorno
-# En Windows:
-venv\Scripts\activate
+# En Windows (Git Bash o WSL):
+source venv/bin/activate
 # En macOS/Linux:
 source venv/bin/activate
 
-# Instalar las librerías necesarias desde requirements.txt
+# 1. Instalar las librerías necesarias
+# El '-e' significa "modo editable" para que los cambios se reflejen.
 pip install -r requirements.txt
 
-# Si no tienes un requirements.txt, instala las librerías clave:
-# pip install pandas scikit-learn dvc[gdrive] mlflow typer
 ```
 
 ### 3\. Configurar Credenciales de DVC (Solo la primera vez)
 
-Este proyecto utiliza Google Drive como almacenamiento remoto. Cada miembro del equipo debe configurar su acceso de forma local y segura.
-
-**Instrucciones:**
+Configura el acceso a Google Drive para descargar los datos.
 
 1.  Sigue la guía para crear credenciales de API de Google Cloud (ID de cliente y Secreto de cliente para una "Aplicación de escritorio").
-2.  Ejecuta los siguientes comandos en tu terminal, reemplazando con tus credenciales personales:
+2.  Ejecuta los siguientes comandos en tu terminal:
 
 <!-- end list -->
 
@@ -116,45 +116,47 @@ dvc remote modify --local myremote gdrive_client_secret TU_SECRETO_DEL_CLIENTE
 
 ### 4\. Descargar los Datos Versionados
 
-Una vez configuradas las credenciales, descarga la última versión de los datos desde el almacenamiento remoto.
-
 ```bash
 dvc pull
 ```
 
-Esto poblará las carpetas `data/raw/` y `data/processed/` con los archivos de datos correspondientes.
+Esto poblará la carpeta `data/raw/` con los archivos de datos necesarios.
 
 -----
 
 ## Flujo de Trabajo de Ejecución (Fase 2)
 
-Con el proyecto refactorizado, la ejecución se basa en scripts de Python.
+Gracias al `Makefile`, la ejecución del proyecto está automatizada y estandarizada.
 
-### Paso 1: Limpieza de Datos
+### Paso 1: Limpieza y División de Datos
 
-Ejecuta el script `make_dataset.py` para tomar los datos "sucios" de `data/raw/`, limpiarlos y guardar la versión procesada en `data/processed/`.
+Este comando ejecuta el script `dataset.py`, que toma el archivo "sucio" de `data/raw/` y genera el archivo limpio `obesity_estimation_cleaned.csv` en `data/processed/`.
 
 ```bash
-python src/data/make_dataset.py data/raw/obesity_estimation_modified.csv data/processed/obesity_estimation_cleaned.csv
+make data
 ```
 
-### Paso 2: Entrenamiento y Registro del Modelo
+### Paso 2: Entrenamiento y Evaluación del Modelo
 
-Ejecuta el script `train_model.py`. Este script hará lo siguiente:
+Este comando ejecuta el script `train.py`. Este es el paso central y realiza las siguientes acciones:
 
-1.  Cargará los datos limpios de `data/processed/`.
-2.  Ejecutará el `GridSearchCV` para encontrar el mejor modelo.
-3.  Registrará todos los parámetros, métricas y el modelo final en **MLflow**.
+1.  Carga `obesity_estimation_cleaned.csv` de `data/processed/`.
+2.  **Divide los datos** en tres conjuntos: **Train (70%)**, **Validation (15%)** y **Test (15%)**.
+3.  **Guarda** los conjuntos `validation_set.csv` y `test_set.csv` en `data/processed/`.
+4.  Entrena el `GridSearchCV` usando **solo el Train Set (70%)**.
+5.  Evalúa el mejor modelo usando el **Validation Set (15%)**.
+6.  Registra todos los parámetros y las métricas de validación en **MLflow**.
+7.  Registra el pipeline del modelo final en el **Model Registry** de MLflow.
 
 <!-- end list -->
 
 ```bash
-python src/models/train_model.py
+make train
 ```
 
-### Paso 3: Revisión de Experimentos y Promoción del Modelo
+### Paso 3: Revisión y Promoción del Modelo
 
-Para revisar los resultados y gestionar los modelos, inicia la interfaz de usuario de MLflow.
+Para revisar los resultados, inicia la interfaz de usuario de MLflow.
 
 ```bash
 # Asegúrate de estar en la raíz del proyecto
@@ -162,29 +164,21 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
 
 1.  Abre `http://127.0.0.1:5000` en tu navegador.
-2.  Explora los experimentos. Verás el "run" de `RandomForest_GridSearch`.
-3.  Ve a la pestaña **"Models"**.
-4.  Haz clic en el modelo `obesity_classifier`.
-5.  Haz clic en la última versión.
-6.  Usa el botón azul **"Stage"** para promover el modelo a la etapa **"Staging"** o **"Production"**.
+2.  Revisa los experimentos. Las métricas (`validation_accuracy`, `validation_f1_weighted`) te dirán qué tan bueno es tu modelo.
+3.  Ve a la pestaña **"Models"**, selecciona `obesity_classifier` y promueve tu mejor versión a la etapa **"Staging"**.
 
-### Paso 4: Predicción con el Modelo Registrado
+### Paso 4: Predicción en Datos Nuevos (Test Set)
 
-Una vez que un modelo ha sido promovido (ej. a "Staging"), puedes usar el script `predict_model.py` para cargar el modelo desde el registro de MLflow y hacer predicciones.
+Este comando ejecuta el script `predict.py`. Simula el uso del modelo en producción.
+
+1.  Carga el modelo promovido a **"Staging"** desde el registro de MLflow.
+2.  Carga el **Test Set (15%)** desde `data/processed/test_set.csv`, que el modelo nunca ha visto.
+3.  Imprime las predicciones y una métrica final de *accuracy* en la terminal.
+
+<!-- end list -->
 
 ```bash
-# Ejecutar predicciones usando el modelo en "Staging"
-python src/models/predict_model.py --data-path data/processed/obesity_estimation_cleaned.csv --model-stage "Staging"
-
-# Si quieres probar con la última versión sin promoverla:
-# python src/models/predict_model.py --data-path data/processed/obesity_estimation_cleaned.csv --model-stage "None"
+make predict
 ```
 
 -----
-
-## Flujo de Trabajo (Fase 1 - Archivado)
-
-Para fines de consulta, los notebooks originales de la Fase 1 se encuentran en la carpeta `notebooks/`.
-
-1.  `1_Limpieza_y_EDA.ipynb`: Contiene el análisis exploratorio y la lógica de limpieza original.
-2.  `2_Modelo_Predictivo.ipynb`: Contiene el prototipo original del modelo y su evaluación.
