@@ -186,3 +186,27 @@ make predict
 ```
 
 -----
+
+## Servir la API en Docker (modelo incluido)
+
+Para empaquetar la API y el modelo en una imagen auto-contenida:
+
+1. Exporta el modelo en Staging a una carpeta local (solo una vez):
+   ```
+   mlflow artifacts download --artifact-uri "models:/obesity_classifier/Staging" --dst-path model_bundle
+   ```
+2. El Dockerfile copia `model_bundle/` y usa `MODEL_URI` para cargarlo. Si ajustas dependencias, usa una versión de pandas con wheel para Python 3.12 (por ejemplo, `pandas==2.1.4`).
+3. Construye la imagen (desde la raíz del repo):
+   ```
+   docker build -t obesity-api .
+   ```
+4. Ejecuta el contenedor:
+   ```
+   docker run -p 8000:8000 obesity-api
+   ```
+   La API expone:
+   - `/health` (debe mostrar `model_loaded: true`)
+   - `/docs` (Swagger UI)
+   - `/predict` (usa el payload de ejemplo de la API).
+
+Nota: así el contenedor no depende de DVC ni de MLflow en runtime, porque el modelo viaja horneado. Si prefieres cargar desde un registry, deja `MODEL_URI` vacío y usa `MLFLOW_TRACKING_URI` + `MODEL_STAGE`/`MODEL_VERSION` como antes.

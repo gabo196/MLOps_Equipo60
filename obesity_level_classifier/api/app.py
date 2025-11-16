@@ -25,6 +25,7 @@ MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db")
 MODEL_NAME = os.getenv("MODEL_NAME", "obesity_classifier")
 MODEL_STAGE = os.getenv("MODEL_STAGE", "None")
 MODEL_VERSION = os.getenv("MODEL_VERSION", None)
+MODEL_URI = os.getenv("MODEL_URI")
 
 # Inicializar FastAPI
 app = FastAPI(
@@ -104,12 +105,15 @@ def load_model():
     """Carga el modelo desde MLflow."""
     global model
     try:
-        mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-        
-        if MODEL_VERSION:
-            model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
+        # Si se provee una ruta local del modelo (bundle exportado), úsala.
+        if MODEL_URI:
+            model_uri = MODEL_URI
         else:
-            model_uri = f"models:/{MODEL_NAME}/{MODEL_STAGE}"
+            mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+            if MODEL_VERSION:
+                model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
+            else:
+                model_uri = f"models:/{MODEL_NAME}/{MODEL_STAGE}"
             
         logger.info(f"Cargando modelo desde: {model_uri}")
         model = mlflow.pyfunc.load_model(model_uri)
