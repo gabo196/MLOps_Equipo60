@@ -58,6 +58,11 @@ def plot_feature_importance(
 
     importances_values = model.feature_importances_
     
+    print(len(feature_names))
+    print(len(importances_values))
+    print(feature_names)
+    print(importances_values)
+
     importances_df = pd.DataFrame({
         'feature': feature_names,
         'importance': importances_values
