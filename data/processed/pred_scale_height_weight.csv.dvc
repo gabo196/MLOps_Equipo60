@@ -1,0 +1,5 @@
+outs:
+- md5: fbc265d059226d1b39a315a3b03f0e8f
+  size: 72908
+  hash: md5
+  path: pred_scale_height_weight.csv

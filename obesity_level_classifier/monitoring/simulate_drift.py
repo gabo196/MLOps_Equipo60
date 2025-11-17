@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, f1_score, classification_report
 # ============================================
 DATA_PATH = Path("data/processed/obesity_estimation_cleaned.csv")
 MODEL_PATH = Path("models/random_forest.joblib")   # Modelo exportado
-OUTPUT_DIR = Path("data_drift")
+OUTPUT_DIR = Path("data/processed")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 TARGET = "NObesity"   # COLUMNA OBJETIVO CORRECTA

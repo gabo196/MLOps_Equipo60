@@ -8,3 +8,8 @@
 /y_train.csv
 /obesity_estimation_cleaned.csv
 /obesity_estimation_test.csv
+/drift_results.csv
+/pred_category_swap_15pct.csv
+/pred_combo_full.csv
+/pred_noise_10pct.csv
+/pred_scale_height_weight.csv
