@@ -5,6 +5,10 @@ import pytest
 import pandas as pd
 import numpy as np
 from pathlib import Path
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 from obesity_level_classifier.dataset import DataCleaner
 from obesity_level_classifier.features import build_preprocessor
 from obesity_level_classifier.modeling.train import build_full_pipeline
@@ -220,6 +224,10 @@ class TestEndToEndPipeline:
             "NObeyesdad": ["normal weight", "overweight i", "normal weight", "overweight ii"],
         })
 
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
     def test_integration_trained_pipeline_and_plots(tmp_path):
         # Reuse cleaned data from previous helper path
         raw_df = _build_raw_obesity_df()
@@ -262,4 +270,8 @@ class TestEndToEndPipeline:
 
         # RandomForest has feature_importances_, so we expect a file
         assert returned_fi_path == fi_path
+<<<<<<< Updated upstream
         assert fi_path.exists()
+=======
+        assert fi_path.exists()
+>>>>>>> Stashed changes

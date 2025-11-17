@@ -24,7 +24,11 @@ class TestDataCleaner:
         assert cleaner.df.shape[0] == len(sample_raw_data)
 
     def test_load_data_file_not_found(temp_data_dir):
+<<<<<<< Updated upstream
         """Test para verificar comportamiento en caso de no encontrar el archivo"""
+=======
+        """Test para verificar el comportamiento en caso de que no se encuentre el archivo"""
+>>>>>>> Stashed changes
         cleaner = DataCleaner(temp_data_dir / "missing.csv")
 
         with pytest.raises(SystemExit):
@@ -121,6 +125,7 @@ class TestDataCleaner:
         # Verificar que se eliminó al menos un duplicado
         assert len(cleaner.df) < initial_count
 
+<<<<<<< Updated upstream
     def test_treat_outliers(temp_data_dir):
         """Test para verificar el tratamiento de outliers"""
         data = {
@@ -130,6 +135,23 @@ class TestDataCleaner:
         }
         test_file = temp_data_dir / "test_data.csv"
         cleaner = DataCleaner(test_file)
+=======
+    def create_temp_csv(tmp_path, data):
+        """Helper to generate temporary CSV files."""
+        f = tmp_path / "input.csv"
+        pd.DataFrame(data).to_csv(f, index=False)
+        return f
+    
+    def test_treat_outliers(temp_data_dir):
+        """Test para verificar el tratamiento de outliers"""
+        data = {
+            "Age": [20, 25, 30, 35, 55],   # 200 is extreme
+            "Height": [0.5, 1.5, 1.6, 1.7, 1.8],  # 10 is extreme
+            "Weight": [50, 60, 70, 80, 120],  # 1000 is extreme
+        }
+        temp = create_temp_csv(temp_data_dir, data)
+        cleaner = DataCleaner(temp)
+>>>>>>> Stashed changes
         cleaner.load_data()
 
         cleaner._treat_outliers()
