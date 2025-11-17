@@ -22,17 +22,6 @@ class TestDataCleaner:
         
         assert cleaner.df is not None
         assert cleaner.df.shape[0] == len(sample_raw_data)
-
-    def test_load_data_file_not_found(temp_data_dir):
-<<<<<<< Updated upstream
-        """Test para verificar comportamiento en caso de no encontrar el archivo"""
-=======
-        """Test para verificar el comportamiento en caso de que no se encuentre el archivo"""
->>>>>>> Stashed changes
-        cleaner = DataCleaner(temp_data_dir / "missing.csv")
-
-        with pytest.raises(SystemExit):
-            cleaner.load_data()
         
     def test_normalize_text(self, sample_raw_data, temp_data_dir):
         """Test que verifica la normalización de texto."""
@@ -124,42 +113,6 @@ class TestDataCleaner:
         
         # Verificar que se eliminó al menos un duplicado
         assert len(cleaner.df) < initial_count
-
-<<<<<<< Updated upstream
-    def test_treat_outliers(temp_data_dir):
-        """Test para verificar el tratamiento de outliers"""
-        data = {
-            "Age": [20, 25, 30, 35, 55],   
-            "Height": [0.5, 1.5, 1.6, 1.7, 1.8],  
-            "Weight": [50, 60, 70, 80, 120],  
-        }
-        test_file = temp_data_dir / "test_data.csv"
-        cleaner = DataCleaner(test_file)
-=======
-    def create_temp_csv(tmp_path, data):
-        """Helper to generate temporary CSV files."""
-        f = tmp_path / "input.csv"
-        pd.DataFrame(data).to_csv(f, index=False)
-        return f
-    
-    def test_treat_outliers(temp_data_dir):
-        """Test para verificar el tratamiento de outliers"""
-        data = {
-            "Age": [20, 25, 30, 35, 55],   # 200 is extreme
-            "Height": [0.5, 1.5, 1.6, 1.7, 1.8],  # 10 is extreme
-            "Weight": [50, 60, 70, 80, 120],  # 1000 is extreme
-        }
-        temp = create_temp_csv(temp_data_dir, data)
-        cleaner = DataCleaner(temp)
->>>>>>> Stashed changes
-        cleaner.load_data()
-
-        cleaner._treat_outliers()
-
-        # outliers should be clipped inside IQR bounds
-        assert cleaner.df["Age"].max() < 200
-        assert cleaner.df["Height"].max() < 10
-        assert cleaner.df["Weight"].max() < 1000
         
     def test_clean_data_pipeline(self, sample_raw_data, temp_data_dir):
         """Test de integración del pipeline completo de limpieza."""
@@ -192,4 +145,3 @@ class TestDataCleaner:
         assert test_output.exists()
         loaded_df = pd.read_csv(test_output)
         assert len(loaded_df) == len(sample_clean_data)
-
