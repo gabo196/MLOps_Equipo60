@@ -57,7 +57,7 @@ def plot_feature_importance(
         return None
 
     importances_values = model.feature_importances_
-    
+
     importances_df = pd.DataFrame({
         'feature': feature_names,
         'importance': importances_values
