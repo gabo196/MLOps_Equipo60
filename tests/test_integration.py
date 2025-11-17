@@ -6,8 +6,11 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+from obesity_level_classifier.dataset import DataCleaner
 from obesity_level_classifier.features import build_preprocessor
-
+from obesity_level_classifier.modeling.train import build_full_pipeline
+from obesity_level_classifier.plots import plot_confusion_matrix, plot_feature_importance
+from obesity_level_classifier.modeling import predict as predict_module
 
 class TestEndToEndPipeline:
     """Tests de integración del pipeline completo."""
@@ -191,3 +194,74 @@ class TestEndToEndPipeline:
         X_transformed = preprocessor.transform(X_new)
         assert X_transformed is not None
         assert X_transformed.shape[0] == len(X_new)
+
+    def _build_raw_obesity_df():
+        """Small synthetic dataset that roughly follows the expected schema."""
+        return pd.DataFrame({
+            # numeric columns (as strings to exercise conversion)
+            "Age": ["20", "30", "40", "50"],
+            "Height": ["1.70", "1.80", "1.60", "1.75"],
+            "Weight": ["70", "80", "60", "90"],
+            "FCVC": ["2", "3", "2", "3"],
+            "NCP": ["3", "4", "3", "4"],
+            "CH2O": ["2", "3", "2", "3"],
+            "FAF": ["1", "2", "1", "2"],
+            "TUE": ["0", "1", "0", "1"],
+            # ordinal features
+            "CAEC": ["no", "always", "sometimes", "frequently"],
+            "CALC": ["no", "always", "sometimes", "frequently"],
+            # nominal features
+            "Gender": ["male", "female", "male", "female"],
+            "family_history_with_overweight": ["yes", "no", "yes", "no"],
+            "FAVC": ["yes", "no", "yes", "no"],
+            "SMOKE": ["no", "yes", "no", "yes"],
+            "SCC": ["no", "no", "yes", "yes"],
+            "MTRANS": ["bike", "car", "walking", "public_transport"],
+            # target column (raw name used in cleaner)
+            "NObeyesdad": ["normal weight", "overweight i", "normal weight", "overweight ii"],
+        })
+
+    
+    def test_integration_trained_pipeline_and_plots(tmp_path):
+        # Reuse cleaned data from previous helper path
+        raw_df = _build_raw_obesity_df()
+        raw_path = tmp_path / "raw_for_plots.csv"
+        raw_df.to_csv(raw_path, index=False)
+
+        cleaner = DataCleaner(raw_data_path=raw_path)
+        clean_df = cleaner.clean_data()
+
+        X = clean_df.drop("NObesity", axis=1)
+        y = clean_df["NObesity"]
+
+        pipeline = build_full_pipeline()
+        pipeline.fit(X, y)
+
+        # --- Confusion Matrix ---
+        y_pred = pipeline.predict(X)
+        labels = sorted(y.unique())
+        cm_path = tmp_path / "cm_integration.png"
+
+        returned_cm_path = plot_confusion_matrix(
+            y_true=y,
+            y_pred=y_pred,
+            labels=labels,
+            output_path=cm_path,
+        )
+
+        assert cm_path.exists()
+        assert returned_cm_path == cm_path
+
+        # --- Feature Importance ---
+        fi_path = tmp_path / "feature_importance_integration.png"
+        feature_names = list(X.columns)
+
+        returned_fi_path = plot_feature_importance(
+            pipeline=pipeline,
+            feature_names=feature_names,
+            output_path=fi_path,
+        )
+
+        # RandomForest has feature_importances_, so we expect a file
+        assert returned_fi_path == fi_path
+        assert fi_path.exists()
