@@ -76,6 +76,40 @@ train: data
 predict: train
 	$(PYTHON_INTERPRETER) obesity_level_classifier/modeling/predict.py
 
+## Run unit and integration tests
+.PHONY: test
+test:
+	pytest tests/ -v --cov=obesity_level_classifier --cov-report=html --cov-report=term
+
+## Run tests quickly
+.PHONY: test-quick
+test-quick:
+	pytest tests/ -q
+
+## Start FastAPI service locally
+.PHONY: serve
+serve:
+	uvicorn obesity_level_classifier.api.app:app --reload --host 0.0.0.0 --port 8000
+
+## Build Docker image (full)
+.PHONY: docker-build
+docker-build:
+	docker build -t obesity-classifier:latest .
+
+## Run Docker container (full)
+.PHONY: docker-run
+docker-run:
+	docker run -d \
+		--name obesity-classifier \
+		-p 8000:8000 \
+		obesity-classifier:latest
+
+## Stop and remove Docker container
+.PHONY: docker-stop
+docker-stop:
+	docker stop obesity-classifier || true
+	docker rm obesity-classifier || true
+
 
 #################################################################################
 # Self Documenting Commands                                                     #
