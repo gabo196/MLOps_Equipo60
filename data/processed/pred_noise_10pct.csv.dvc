@@ -1,0 +1,5 @@
+outs:
+- md5: daa9991ef8a66085713a299d84b00ebf
+  size: 72131
+  hash: md5
+  path: pred_noise_10pct.csv
