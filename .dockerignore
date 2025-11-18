@@ -61,7 +61,7 @@ data/interim/*
 
 # Documentation
 docs/
-*.md
+# *.md  # Comentado: README.md es necesario para pip install -e .
 
 # CI/CD
 .github/

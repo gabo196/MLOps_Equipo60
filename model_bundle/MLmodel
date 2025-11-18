@@ -1,5 +1,4 @@
-artifact_path: file:C:/Users/Cadelzo/Documents/Projects/2 Data Scientist Machine Learning/00
-  TEC/4 MLOps/MLOps_Equipo60/mlruns/1/models/m-2224de51e41a4001876a8f868a9f8b75/artifacts
+artifact_path: /home/gerardo/maestria/mlops/MLOps_Equipo60/mlruns/1/models/m-b143c381a9c6481ba70253f2ad890b23/artifacts
 flavors:
   python_function:
     env:
@@ -8,7 +7,7 @@ flavors:
     loader_module: mlflow.sklearn
     model_path: model.pkl
     predict_fn: predict
-    python_version: 3.12.10
+    python_version: 3.12.12
   sklearn:
     code: null
     pickled_model: model.pkl
@@ -16,11 +15,11 @@ flavors:
     sklearn_version: 1.3.2
 is_signature_from_type_hint: false
 mlflow_version: 3.6.0
-model_id: m-2224de51e41a4001876a8f868a9f8b75
-model_size_bytes: 6842213
-model_uuid: m-2224de51e41a4001876a8f868a9f8b75
+model_id: m-b143c381a9c6481ba70253f2ad890b23
+model_size_bytes: 6842143
+model_uuid: m-b143c381a9c6481ba70253f2ad890b23
 prompts: null
-run_id: 20643a10e803416a8dbfb5b472281386
+run_id: fb1bc507a3c54b18b0d8ca2ad22b72b9
 saved_input_example_info:
   artifact_path: input_example.json
   pandas_orient: split
@@ -42,4 +41,4 @@ signature:
   outputs: '[{"type": "string", "required": true}]'
   params: null
 type_hint_from_example: false
-utc_time_created: '2025-11-16 04:36:44.800390'
+utc_time_created: '2025-11-18 03:29:10.286567'
